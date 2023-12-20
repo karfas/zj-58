@@ -472,7 +472,7 @@ int main(int argc, char *argv[]) {
                  iBlockHeight, tHeader.cupsHeight - iRowsToPrint);
 
       iRowsToPrint -= iBlockHeight;
-      unsigned iBytesChunk = 0;
+      int iBytesChunk = 0;
 
       // first, fetch whole block from the image
       if (iBlockHeight)
@@ -490,6 +490,9 @@ int main(int argc, char *argv[]) {
         DEBUGPRINT("--------Compress line from %d to %d bytes", tHeader.cupsBytesPerLine, width_bytes);
         iBytesChunk = compress_buffer(pRasterBuf, iBytesChunk,
                                       tHeader.cupsBytesPerLine, width_bytes);
+        if (iBytesChunk<0) {
+          iBytesChunk=(tHeader.cupsBytesPerLine *iBlockHeight)+iBytesChunk;
+        }
       }
 
       // runaround for sometimes truncated output of cupsRasterReadPixels
